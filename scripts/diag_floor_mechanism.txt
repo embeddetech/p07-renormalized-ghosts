@@ -1,0 +1,43 @@
+======================================================================
+[1] L=4, lambda=0, middle bond (1|2) -- exact eigenstate, S STATIONARY
+======================================================================
+    real-time residual ||(H-E)psi|| = 6.139e-15  (exact eigenstate)
+    entropy at every bond of the exact vacuum:
+      bond 0|1 : S=0.283935   (9 Schmidt values)
+      bond 1|2 : S=0.274049   (81 Schmidt values)
+      bond 2|3 : S=0.283935   (9 Schmidt values)
+    the MIDDLE bond is the one quoted in the paper.
+      t= 0.0  S_exact=0.274049
+      t= 3.0  S_exact=0.274049
+      t= 6.0  S_exact=0.274049
+      t= 9.0  S_exact=0.274049
+      t=12.0  S_exact=0.274049
+    => stationary at 0.274049
+
+======================================================================
+[2] L=4, lambda=0, middle bond -- discarded Schmidt weight past rank 40
+======================================================================
+    Schmidt values at the middle bond : 81
+    discarded weight beyond rank 40   : 2.1767e-11
+    => far below the observed floor; NOT static representability
+
+======================================================================
+[3] L=4, lambda=0, middle bond -- simulated D=40 vs the D=100 control
+======================================================================
+      t= 0.0  S=0.274049   [D=40]
+      t= 3.0  S=0.274091
+      t= 6.0  S=0.274114
+      t= 9.0  S=0.273831
+      t=12.0  S=0.275188
+    D= 40 : 0.274049 -> 0.275188   (drift 1.139e-03)
+      t= 0.0  S=0.274049   [D=100]
+      t= 3.0  S=0.274089
+      t= 6.0  S=0.274091
+      t= 9.0  S=0.274070
+      t=12.0  S=0.274086
+    D=100 : 0.274049 -> 0.274086   (drift 3.773e-05)
+    => D=40 drifts ~1e-3; D=100 flat to ~5e-5: the climb is not intrinsic
+
+[4] L=16 production climb: skipped (slow). Re-run with --l16.
+
+done.

@@ -1,0 +1,6 @@
+[13:35:15] val start M=10 cap=4 lam=0.020 L=16
+[13:35:30] build done+checkpointed: dim(P=0)=4119 nnz=246619 [15s]
+[13:35:31] evolution done [1s]
+[13:35:31] full/naive(t=40) = 0.8959   (|P|=231)
+[13:35:33] full/Schur(t=40) = 0.9951  (sparse LU, |Q|=3888) [1s]
+[13:35:33] val done

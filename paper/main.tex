@@ -1,0 +1,652 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.05in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+
+\newcommand{\PT}{\mathcal{PT}}
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+
+
+\title{The multiplicity horn survives renormalization:\\
+exact quantum evolution of a ghost--normal field theory,\\
+the folded channel sum, and an accumulated-truncation floor}
+\author{Jonathan Torkelson\\[2pt]
+\small Embeddetech, Inc., Tulsa, Oklahoma, USA \quad
+\texttt{jtorkelson@embeddetech.com}}
+\date{July 13, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent Two earlier papers of this program price the
+ghost-sector trilemma on a premise: that the quantum vacuum-decay
+rate of a coupled ghost sector scales with the number of open
+resonant channels---the \emph{multiplicity horn}---so that the
+divergent field-theoretic rate is a channel-counting statement,
+not an artifact of perturbation theory. Against this stands the
+possibility that structural effects beyond perturbation
+theory---the position we test, framed as the
+Gross--Strumia--Teresi--Zirilli (GSTZ) metastability
+suggestion---could erode the channel sum. We put the premise
+to a falsification test in a genuinely quantum, multimode
+1+1-dimensional two-field theory (normal $\varphi$ plus ghost
+$\chi$, contact coupling $\lambda\varphi^2\chi^2$, equal masses:
+maximal resonance, with the four-particle
+$\varphi\varphi\chi\chi$ shell exactly degenerate with the
+vacuum) by exact sparse-propagator evolution and a static-$E_0$ Feshbach/Schur
+folding of the full Hamiltonian onto the resonant shell. The
+pre-registered fork read: (a) any deficit of the exact rate
+against the bare channel sum is absorbed by standard
+renormalization (dressing) of the states entering the golden rule, or (b) a structural
+suppression survives folding. The data return (a), to the ${\sim}1\%$
+level (with a documented downward drift of the static-$E_0$ fold):
+across couplings where the \emph{naive} channel sum misses by
+up to $31\%$, and across mode numbers up to $M=16$ where the
+naive ratio slides to $0.774$, the folded (Schur) prediction
+tracks the exact evolution at $0.988$--$1.000$. By
+elimination---diagonal self-energies and vacuum-column vertex
+corrections each reproduce the naive ratio to the four digits resolved---the
+deficit is attributed to the shell--shell block: first-order splitting
+and coherent mixing of the degenerate shell, textbook degenerate-level
+renormalization, no new
+mechanism. A dimension ladder calibrated to the exact Hamiltonian
+to $5.7\times10^{-16}$ reproduces the program's reduced-measure
+rungs in quantum dress: the exactly resonant $d=1$ shell
+saturates with cutoff, the $d=1$ golden-rule sum grows log-class, and the
+$d=2$ sum grows as a power (fitted exponent $2.26$ against the
+predicted $\approx2$; a short-lever cutoff sweep, a mechanism check rather than a
+scaling measurement). A matrix-product-state cross-check
+certifies the position-space theory against exact diagonalization at $L=4$
+(to $6\times10^{-6}$), runs in production at $L=16$, and then meets an honest
+limit that we characterize rather than hide: the
+Trotter/truncation floor is non-monotonic in the step
+($0.337/0.057/0.231$ at $dt=0.04/0.02/0.01$, $D=40$), and
+raising $D$ from $40$ to $64$ moves the floor from $0.057$
+to $0.062$---saturation, per the pre-registered decision rule. The
+volume-scaling extension is therefore left open at the MPS level;
+the verdict itself rests on the exact methods. Conformal-gravity
+pricing that leans on the multiplicity premise survives this
+test; positions that require a nonperturbative erosion of the
+channel sum do not receive support at any scale we can reach.
+\end{abstract}
+
+\newpage
+\begin{quote}
+\small\noindent\textbf{Note on provenance.} This manuscript is an
+experiment in AI-conducted research as much as a physics paper. The
+project began when the author asked the large language model Claude
+Fable~5 (Anthropic): \emph{``Is it not possible that the antilinear
+PT/time-reversal symmetry element could maybe predict indivisible
+non-Markovian processes?''} Everything that followed was performed by
+the model: the research program, the theorems and proofs, the numerical
+experiments, the literature search, and this text. The model was
+repeatedly prompted to attack its own results adversarially and to
+search for prior work. The author, a professional engineer rather than
+a physicist, directed and reviewed the sessions but makes no claim to
+comprehension of the findings, and is circulating the manuscript for
+independent review by professional physicists. Accordingly, nothing
+here should be taken on trust: every numerical claim is reproducible
+from the public scripts (see Code availability); the originating
+conversation, project briefing, and full research notebook are
+preserved in the program's hub repository,
+\url{https://github.com/embeddetech/ghosts-program}.
+\end{quote}
+
+%=====================================================================
+\section{Introduction}
+\label{sec:intro}
+
+This is the seventh paper of a program
+that reads quantum dynamics in Barandes' currency of indivisible
+stochastic processes on
+configurations~\cite{Barandes,indivisible,instantaneous,conditioned,choosing,unfolded}. Two of its predecessors lean on one
+premise. The vacuum-decay analysis of the ghost
+sector~\cite{instantaneous} factorizes the golden-rule rate into a
+boost-orbit volume times a reduced integral whose scaling is set
+by channel counting; the conformal-gravity pricing
+of~\cite{choosing} then prices the Lorentz-violating-cutoff horn
+of the trilemma on that reduced measure. Both inherit the
+field-theoretic position that the divergent decay rate of a
+coupled ghost vacuum is a statement about the \emph{multiplicity}
+of open resonant channels---what those papers call the
+multiplicity horn.
+
+That premise has a published antagonist. Gross, Strumia, Teresi,
+and Zirilli, asking whether negative kinetic energy is even
+metastable, concede the perturbative rate is ``naively infinite''
+while suggesting the true nonperturbative rate is unknown and
+possibly benign~\cite{GSTZ2021}; a recent line of work constructs
+interacting ghost systems whose structure arrests the cascade
+entirely~\cite{Deffayet2026,EwasiukProfumo2026}. If some
+structural mechanism---beyond the textbook renormalization of the
+states entering the golden rule---eroded the channel sum in a
+genuinely quantum evolution, the premise under two papers of this
+program would fail, and with it their pricing of the trilemma.
+
+This paper is the falsification test. We build the smallest
+genuinely quantum, multimode theory in which the question is
+sharp: a normal field $\varphi$ and a ghost field $\chi$ in
+$1{+}1$ dimensions, momentum modes on a circle, contact
+interaction $\lambda\int\varphi^2\chi^2$, equal masses. The ghost
+sign makes the four-particle $\varphi\varphi\chi\chi$ states with
+balanced momenta \emph{exactly degenerate} with the vacuum: the
+resonant shell of the golden rule is not an approximation here
+but an exact zero-energy subspace, and its population count is
+the channel multiplicity. The pre-registered fork
+(recorded in the program notebook before the decisive runs):
+\begin{itemize}
+\item[(a)] the exact decay of the vacuum tracks the channel sum
+after standard renormalization of the states entering it---the
+multiplicity premise survives; or
+\item[(b)] a deficit survives the folding---incipient structural
+suppression, and the premise fails.
+\end{itemize}
+The data return (a) at every scale we can reach
+(Sec.~\ref{sec:fold}). The deficit that perturbation theory does
+show is attributed, by elimination, to first-order splitting and
+coherent mixing of the degenerate shell
+(Sec.~\ref{sec:mechanism})---renormalization, not suppression. A
+dimension ladder reproduces the reduced-measure rungs
+of~\cite{instantaneous} in quantum dress (Sec.~\ref{sec:ladder}). A
+matrix-product-state cross-check certifies the position-space
+theory against ED at $L=4$ (production at $L=16$) and then hits a truncation floor that we
+measure and report as a methods limit rather than extrapolate
+through---an accumulated-truncation floor (Sec.~\ref{sec:mps}).
+
+Honest scope, stated at the outset: everything here is
+$1{+}1$-dimensional (with a $d=2$ spot check), at most $M=16$
+($32$ modes per field), occupation caps to $10$, and a static-energy Schur fold.
+What the test shows is that finite-channel quantum dynamics
+contains no mechanism eroding the channel sum beyond textbook
+renormalization \emph{above the ${\sim}1\%$ level reached here}; the
+infinite-channel, fully resummed limit---the
+true boost-orbit volume---remains analytic territory, priced
+in~\cite{instantaneous} and not re-derived here.
+
+%=====================================================================
+\section{The model and the channel census}
+\label{sec:model}
+
+On $2M$ momentum modes per field ($k_n=2\pi n/\ell$,
+$n\in\{\pm1,\dots,\pm M\}$, zero mode dropped, on a circle of length
+$\ell$; the small-$M$ stage-3 checks, the Sec.~\ref{sec:model} channel
+ratios, the $d=2$ spot check, and the ladder calibration use $\ell=8$,
+while the campaign, rate-window, born-vacuum, and dimension-ladder
+scans use $\ell=16$),
+with equal masses ($m=1$) and free Hamiltonian
+$H_0=H_\varphi-H_\chi$ (the ghost enters with the Ostrogradski
+sign), the contact interaction
+$\lambda\int\varphi^2\chi^2$ couples the Fock vacuum to
+four-particle states $\varphi_{k_1}\varphi_{k_2}\chi_{k_3}
+\chi_{k_4}$ with $\sum k_i=0$. At equal masses the subset with
+$\{k_1,k_2\}=\{-k_3,-k_4\}$ pairings has free energy exactly
+zero: the resonant shell. The initial state is the
+negative-norm-free Fock vacuum of the free theory, whose
+excitations carry negative energy---the arena of the
+GSTZ framing~\cite{GSTZ2021}; we note that the integral-of-motion
+construction of~\cite{Deffayet2026} is built on $(x^2-y^2)$-type interactions and
+does not extend to a pure $\varphi^2\chi^2$ coupling (there the biquadratic
+enters only as an explicitly nonintegrable perturbation), so their
+mechanism does not protect this coupling.
+
+The channel census (\texttt{scripts/t5\_channel\_ladder.py}) counts
+resonant channels $10/21/36/55$ at $M=2/3/4/5$ (the coupled
+resonant pairings, already including the same-mode pairs; the full
+zero-energy subspace $P$ quoted in Table~\ref{tab:verdict} is larger,
+since it also collects the zero-energy two-particle
+$\varphi_k\chi_{-k}$ pairs---and, at larger particle-number caps,
+higher-number degenerate states---not only these four-particle
+pairings);
+channel couplings
+are $g=\lambda/(\ell\sqrt{w_1w_2w_3w_4})$ (the $w_i$ the four
+participating mode frequencies) with a $1/\sqrt2$ per
+identical pair, and the analytic channel table matches the exact
+Hamiltonian's vacuum column to $5.7\times10^{-16}$
+(\texttt{scripts/t5\_dimension\_ladder.py})---the calibration that anchors
+the ladder to the same theory. The archived check is at $d=1$,
+$\ell=8$, $M=4/6$, cap~4; the $d=2$ rung applies the same
+box-normalized vertex without an archived exact-Hamiltonian
+comparison of its own.
+
+Exact sparse-propagator evolution of $\langle N_\varphi\rangle(t)$ against
+the first-order channel sum gives ratios $0.999$--$0.995$ out to
+$t=20$ at $\lambda=0.02$: at weak coupling the naive
+multiplicity premise is already nearly exact. The question is
+what happens when it is not.
+
+%=====================================================================
+\section{The decisive test: folding the full theory onto the
+shell}
+\label{sec:fold}
+
+At larger coupling the naive channel sum overshoots the exact
+evolution. The decisive question is whether the deficit is
+\emph{renormalization} (the states entering the golden rule are
+dressed) or \emph{suppression} (something erodes the
+multiplicity itself). The instrument that separates them is a
+(static-$E_0$) Feshbach/Schur fold: with $P$ the projector onto the vacuum
+plus the full degenerate shell and $Q$ the rest,
+\[
+H_{\rm eff}\;=\;PHP\;-\;PHQ\,(QHQ-E_0)^{-1}QHP,
+\qquad E_0=0,
+\]
+evolved exactly within $P$. The fold keeps every channel---the
+multiplicity is untouched---while dressing the shell and the
+vacuum by the full $Q$-space to second order in the fold and to
+all orders in the $Q$-space dynamics. If the deficit is
+renormalization, the folded prediction tracks the exact
+evolution; if multiplicity erodes by a mechanism beyond the reach of the
+static second-order dressing, it cannot.
+
+\begin{table}[t]
+\centering\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+configuration & full/naive & full/Schur & \\
+\midrule
+$M=2/3/4$, cap 4, $\lambda=0.02$, $t=40$ & --- &
+$1.0000\,/\,0.9997\,/\,0.9993$ & \\
+$M=2/3/4$, cap 6 & --- & $0.9998\,/\,0.9984\,/\,0.9963$ & \\
+$M=4$, cap 4, $\lambda=0.04$ & $0.9434$ & $0.9972$ & \\
+$M=10$, cap 4, $\lambda=0.02$ & $0.8959$ & $0.9951$ & \\
+$M=12$, cap 4 & --- & $0.9941$ & \\
+$M=16$, cap 4 & $0.7737$ & $0.9924$ &
+{\footnotesize($|P|=561$, $|Q|=15{,}416$)}\\
+$M=6$, cap 6 & --- & $0.9884$ &
+{\footnotesize($|Q|=22{,}056$)}\\
+\bottomrule
+\end{tabular}
+\caption{Exact evolution versus the naive channel sum and the
+Schur-folded channel sum
+(\texttt{scripts/t5\_stage3.py}, \texttt{scripts/t5\_campaign.py}). Where the
+naive sum misses by $23\%$ ($M=16$), the folded sum tracks the
+exact rate to $0.8\%$. The $M\le4$ rows are the $\ell=8$ stage-3
+checks and the $M\ge6$ rows the $\ell=16$ campaign ($m=1$ throughout);
+the naive ratio is box-dependent at the $\sim1$--$2$ percentage-point
+level, but the Schur-folded band is robust to $\ell$, so the verdict
+does not depend on the box.}
+\label{tab:verdict}
+\end{table}
+
+Table~\ref{tab:verdict} is the verdict. Across the campaign the
+folded ratio sits in the band $0.988$--$1.000$ while the naive
+ratio slides from $0.995$ to $0.774$. The $\lambda$-scaling of
+the naive deficit at $M=3$, cap 6 ($0.0057/0.0227/0.0883/0.3144$ across
+$\lambda=0.005\to0.04$, close to $\times4$ per doubling)
+identifies its leading piece as $\lambda^2$---the $(\Delta E\,t)^2$
+signature of an $O(\lambda)$ splitting of the exactly degenerate
+shell---with the sub-$\times4$ growth at the top of the range
+marking a negative (saturating) higher-order ($\lambda^4$) correction; the folded column stays at
+$0.0001$--$0.0069$ throughout, including where the naive sum
+misses by $31\%$. Occupation-cap convergence (caps $4/6/8/10$ at
+$M=2$, dimensions to $2568$) holds the folded ratio flat at
+$0.9998$--$1.0000$ while the naive ratio settles
+non-monotonically near ${\sim}0.956$: the deficit is not a truncation artifact, and
+neither is its absorption by the fold. A $d=2$ spot check (the
+$48$-channel shell $\{-1,0,1\}^2\setminus0$, cap 4) gives
+full/Schur $=1.0000$: the same behavior holds in the one $d=2$
+shell we can reach.
+
+One honest sentence the table earns: the folded ratio drifts
+mildly downward as the fold deepens ($1.0000$ at small $M$ to
+$0.9884$ at the largest $|Q|$ we can invert), which is
+consistent with the expected degradation of the \emph{static}-$E_0$ Schur
+approximation rather than a resurgent deficit (fork (b) is thereby
+excluded only above the ${\sim}1\%$ level at the deepest reachable
+fold)---but we state it rather
+than absorb it, and the full fold at $|Q|\approx81{,}000$
+(cap-6 $M=8$) exceeded the memory available to this program; the
+record there is the elimination chain of
+Sec.~\ref{sec:mechanism}, not a folded ratio.
+
+%=====================================================================
+\section{What the deficit is: attribution by elimination}
+\label{sec:mechanism}
+
+At $M=8$, cap 6, the naive ratio is $0.8620$. Two partial
+dressings were computed exactly
+(\texttt{scripts/t5\_partial\_folds.py}) and both \emph{fail} to move it:
+folding only the diagonal self-energies reproduces the naive
+ratio exactly, and folding the vacuum-column vertex correction
+reproduces it exactly again ($0.8620$ both times). What remains---%
+and what the full fold captures at reachable $M$---is the
+\emph{shell--shell block}: the direct couplings among degenerate shell
+members, their $Q$-induced second-order corrections, and the vertex
+corrections to non-vacuum columns. Both partial dressings retain the
+naive first-order \emph{structure} (a channel-by-channel sum of
+$|g_f|^{2}$ terms with no shell--shell rotation), which is why neither
+can move the ratio. Because the free energies vanish on the shell, the
+shell--shell block splits it at first order in $\lambda$; entering the
+transition probability as $(\Delta E\,t)^{2}$, that splitting reproduces
+the $\lambda^{2}$ growth of the deficit measured in
+Sec.~\ref{sec:fold}. No wave-function $Z$-factor is involved: the static
+fold is Hermitized and evolved unitarily inside $P$
+(\texttt{scripts/t5\_stage3.py}), so it carries $Z\equiv1$ by
+construction, and in the exact evolution the \emph{total} norm leaked
+out of $P$ at this configuration is $6.3\times10^{-3}$ against a
+$13.8\%$ naive deficit---over an order of magnitude too small to be the
+leading piece. The deficit is thus attributed, by elimination
+(each partial dressing individually null; a shell-shell-\emph{only} fold was not
+separately computed, and the full fold at this
+configuration is memory-limited, so the attribution leans on the
+reachable-$M$ folds of Table~\ref{tab:verdict}), to degenerate-shell
+splitting---dressed kinematics, not eroded multiplicity. (The notebook records a failed expectation here:
+the author predicted the vertex correction would carry the
+deficit at the ${\sim}0.98$ level; it carried none of it. The
+prediction and its failure are both logged, per the program's
+pre-registration discipline.)
+
+Two further signatures close the dynamical story
+(\texttt{scripts/t5\_stage4.py}). The two-component window for the
+vacuum-survival rate $\Gamma(t)$ (the log-derivative of the survival
+probability), $\Gamma(t)=a+bt$ at cap~4, returns $b=4.28\times10^{-5}$ against
+$2S_{\rm exact}=4.53\times10^{-5}$ (${\sim}6\%$; $S_{\rm exact}=\sum_{\rm shell}|g|^{2}$, each exactly-resonant $E\!\approx\!0$ channel's squared coupling---the matrix-element modulus squared computed in the script), with the constant
+term $a=2.03\times10^{-4}$ sitting just above the golden-rule plateau
+($1.56$--$1.84\times10^{-4}$). And the born-vacuum signature---in a deliberately detuned twin
+($m_{\chi}=1.35$, where the pair-channel detunings die as $1/k$ in the
+UV so the energy--time window $|\Delta E|<2\pi/t$ can close; the twin is
+detuned in the \emph{spectrum} only---the vertex normalization retains
+the $m=1$ mode functions, a smooth $O(1)$ reweighting immaterial to the
+window kinematics read off here): the
+transfer rate is \emph{sustained then collapsing} while the number of
+channels inside that window falls ($471\to7$ across $t=5\to120$)---the
+vacuum decays as a multichannel resonance while channels are open and
+stops when they close. Whether the rate itself grows logarithmically with
+time in the born-vacuum regime is not resolvable at $M=8$ and we
+do not claim it; the sustained-then-collapse profile is the
+signature shown.
+
+%=====================================================================
+\section{The dimension ladder, in quantum dress}
+\label{sec:ladder}
+
+The reduced-measure analysis of~\cite{instantaneous} assigns
+vacuum-decay integrals to rungs by spacetime dimension and vertex
+class. With the channel table calibrated to the exact Hamiltonian
+($5.7\times10^{-16}$, Sec.~\ref{sec:model}), the same rungs can
+be read quantum mechanically. Three pre-registered predictions,
+all confirmed (\texttt{scripts/t5\_dimension\_ladder.py}; the
+golden-rule sums use a Gaussian smoothing width $\eta=0.1$, and the
+quoted exponents shift by ${\sim}0.01$--$0.15$ across
+$\eta=0.05$--$0.2$ without changing any verdict):
+the exactly resonant $d=1$ shell \emph{saturates} with cutoff
+(P1: $+1.5\%$ over the last doubling at $\Lambda=100$); the
+$d=1$ golden-rule sum grows \emph{log-class}, the channel-table
+image of Garriga--Vilenkin's $D=2$ logarithm~\cite{GV2013} (P2:
+power-fit
+exponent $0.156$ with still-decaying increments---consistent with
+a logarithm approaching its asymptote, and stated as log-class
+evidence rather than a converged asymptote); and the $d=2$ sum
+grows as a \emph{power} (P3: fitted exponent $2.263$ against the
+predicted ${\approx}2$; the $d=2$ scan is a short-lever cutoff sweep
+(cutoff $M=4\text{--}8$, three-point fit), so this
+is a mechanism check, not a scaling measurement). Channel-table
+extensivity holds within ${\sim}7.4\%$ under volume doubling. (The
+notebook also records that the author initially mislabeled which
+dimension carries the log rung; the docstring was corrected
+against~\cite{instantaneous} before the first run.)
+
+%=====================================================================
+\section{The MPS cross-check, and the accumulated-truncation floor}
+\label{sec:mps}
+
+The exact methods above live in momentum space. As a fourth,
+independent cross-check we evolve the position-space lattice
+theory (two bosons per site, open boundaries,
+$H=H_\varphi-H_\chi+\lambda\sum_i\varphi_i^2\chi_i^2$) by
+second-order TEBD, preparing the free vacuum as the
+imaginary-time ground state of the sign-flipped auxiliary
+Hamiltonian $H_\varphi+H_\chi$ (the same state; the ghost sign
+enters real-time evolution only), and reading the normal-sector
+energy transfer $\Delta E_\varphi(t)$ per interior site.
+
+\emph{Certification.} The gate run against dense exact
+diagonalization at $L=4$ ($D=100$, $dt=0.02$, second-order
+Trotter, initialized from the exact ground state via dense
+diagonalization of the auxiliary Hamiltonian) agrees to
+$2$--$6\times10^{-6}$ at $t=1\ldots4$---up to three orders below
+signal (by $t=4$; ${\sim}50\times$ below at $t=1$). At $L=16$, $D=40$, $dt=0.02$ (the production
+protocol): the $\lambda=0$ floor is $\max|\Delta E|=5.73\times
+10^{-2}$ ($7.16\times10^{-3}$ per interior site), the
+$\lambda=0.06$ normal-sign twin sits at $5.41\times10^{-2}$, and
+the $\lambda=0.06$ ghost run shows $\Delta E_\varphi/{\rm site}
+=8.93\times10^{-3}$ by $t=12$---a signal $24.8\%$ above the floor.
+At $D=40$ only the $\lambda=0.12$ rung separates cleanly from
+the floor (${\sim}1.9\times$, on the diagnostic $dt=0.01$ ladder
+described below); the $\lambda=0.03$ rung is
+floor-buried, so the coupling-scaling claim of this paper is
+carried by the exact methods of Secs.~\ref{sec:fold}
+and~\ref{sec:ladder}, not by an MPS $\lambda$-ladder.
+
+\emph{The floor, measured.} The floor is not a precision
+issue: at $10^{-2}$--$10^{-1}$ it sits fourteen orders above
+machine epsilon, and it is non-monotonic in the Trotter step---%
+$0.337/0.057/0.231$ at $dt=0.04/0.02/0.01$ ($D=40$,
+$L=16$)---the classic signature of a Trotter/truncation tradeoff:
+Trotter error falls as $T\,dt^2$ while truncation error, the
+Schmidt weight discarded at each re-compression to $D$,
+accumulates with the step count ${\sim}T/dt$. The sum is
+minimized near $dt=0.02$, and refining the step \emph{backfires}
+(a shared expectation of author and director, refuted by the
+data and logged). The mechanism is \emph{not} a free-field entanglement
+barrier. At $\lambda=0$ the free vacuum is an exact eigenstate of the
+real-time generator, and the $L=4$ gate prepares it exactly (dense
+diagonalization of the auxiliary Hamiltonian); there its middle-cut
+entropy across the middle bond is stationary---$0.2740$ at every
+$t\in[0,12]$---so there is no
+free-field entanglement
+growth to outrun the $S\sim\log D$ capacity. Nor is the floor static
+representability alone: at $L=4$ the exact vacuum's discarded Schmidt
+weight beyond rank $40$ at that bond is $2.2\times10^{-11}$, far below the observed
+floor. What accumulates is Trotter-injected excitation, repeatedly
+re-truncated: in the production protocol ($L=16$, $D=40$, $dt=0.02$) the
+\emph{simulated} state's middle-cut entropy climbs from $0.249$ at $t=0$
+to $0.89$ at $t=12$, whereas at $L=4$---the only size at which an exact
+reference exists---the exact state does not move and the $D=40$
+simulation tracks it to ${\sim}10^{-3}$ ($0.2740\to0.2752$). The
+$L=16$ runs prepare the vacuum variationally, by annealed
+imaginary-time TEBD at $D=40$, so their climb mixes Trotter-injected
+excitation with imperfect eigenstate preparation; the $L=4$, $D=100$
+control (flat to $5\times10^{-5}$) is what shows the climb is not
+intrinsic. The pre-registered decision run
+($D=64$, $dt=0.02$, $L=16$) returned a floor of
+$6.22\times10^{-2}$ against $D=40$'s $5.73\times10^{-2}$: a
+$60\%$ increase in bond dimension (a $13\%$ increase in
+$\log D$ capacity) did not lower the floor (it rose slightly). Per the decision
+rule fixed before the run, we conclude the MPS is
+truncation-limited at this coupling and report it as a methods
+limit: \emph{no volume-scaling claim is made from MPS data}. The
+diagnostic $dt=0.01$ ladder (including an $L=32$ point whose
+per-site transfer came out negative, i.e.\ non-extensive under
+truncation) is exactly that---diagnostic; volume extensivity at
+the field level is left open at the MPS level, supported here
+only by the exact channel-table extensivity (${\sim}7.4\%$) and the
+$L=4$ ED gate test.
+
+For an exact integrator none of this arises---which is precisely
+why the verdict of this paper rests on ED and the Schur fold,
+with the MPS supplying an independent $L=4$ certification (production at $L=16$) and an
+honestly characterized boundary of applicability.
+
+%=====================================================================
+\section{Relation to prior work}
+\label{sec:prior}
+
+Real-time false-vacuum decay on quantum lattices is an active
+lane: spin-chain false-vacuum decay~\cite{Lagnese2021}, qumode
+MPS simulations of scalar-field decay---the nearest
+methodological template to Sec.~\ref{sec:mps}%
+~\cite{AbelSpannowskyWilliams2025}, and Fermi-golden-rule onset
+studies in discrete-mode systems~\cite{BurshteinGoldstein2024}.
+On the ghost side, the state of the art in exact quantum
+treatments is the exact operator-conservation-law moment bounds
+of~\cite{EwasiukProfumo2026} and the integral-of-motion
+construction of~\cite{Deffayet2026}; the metastability suggestion
+tested here is that of~\cite{GSTZ2021}, and the channel-counting
+frame descends from Cline--Jeon--Moore~\cite{CJM2004}; the low-dimensional log
+structure enters via the reduced-measure ladder of~\cite{instantaneous}. To our knowledge no
+published work evolves a multimode ghost--normal theory in real
+time, and none tests vacuum decay against channel count; both
+statements were re-checked against the 2025--2026 literature at
+drafting. The result is
+load-bearing in opposite directions for two camps: for the
+structural-stability program~\cite{Deffayet2026,EwasiukProfumo2026} it marks where structure must enter (their
+mechanisms are interaction-structural, absent for
+$\varphi^2\chi^2$); for the metastability
+suggestion~\cite{GSTZ2021} it removes the only
+finite-channel mechanism we could construct.
+
+%=====================================================================
+\section{Discussion}
+\label{sec:discussion}
+
+What is established, at what strength. \emph{Exact}: the
+four-particle shell's exact degeneracy with the vacuum by
+construction, and the analytic channel-table calibration (matching the
+exact vacuum column to $5.7\times10^{-16}$). \emph{Empirical
+(static-$E_0$ fold)}: the folded channel sum tracks the exact sparse-propagator
+evolution within the band $0.988$--$1.000$ across every configuration
+where the fold is computable (Table~\ref{tab:verdict}), with the documented
+downward drift of the static-$E_0$ approximation; the two null partial
+folds of Sec.~\ref{sec:mechanism} (the shell-splitting attribution they
+support is inferred, not exact).
+\emph{Computed, pre-registered}: the dimension-ladder rungs (P1
+saturation; P2 log-class evidence, asymptote not pinned; P3
+power, short-lever cutoff sweep). \emph{Certified}: the MPS propagator against ED at $L=4$, $D=100$
+(production at $L=16$, $D=40$), with a measured truncation floor beyond it. \emph{Not
+claimed}: volume scaling from MPS; the born-vacuum log-growth of
+the rate; the infinite-channel resummed limit, which remains the
+analytic content of~\cite{instantaneous}.
+
+For the program, the consequence is simple: the multiplicity
+premise under the vacuum-decay pricing of~\cite{instantaneous} and
+the conformal-gravity fork of~\cite{choosing} survives its own
+falsification test. A structural suppression of the channel sum,
+if one exists, must live where this test cannot reach---in the
+infinite-channel limit, in higher dimensions at depth, or in
+interaction structures engineered for
+stability~\cite{Deffayet2026,EwasiukProfumo2026}---and not in the
+generic finite-channel quantum dynamics of a coupled ghost.
+
+\paragraph{Code availability.} All numerical claims are
+reproducible from the public scripts in the program repository:
+{\emergencystretch=2em\def\_{\char`\_\allowbreak}\catcode`\/=13 \def/{\char`\/\allowbreak}%
+\texttt{scripts/t5\_channel\_ladder.py}, \texttt{scripts/t5\_stage2.py},
+\texttt{scripts/t5\_stage3.py}, \texttt{scripts/t5\_stage4.py},
+\texttt{scripts/t5\_dimension\_ladder.py}, \texttt{scripts/t5\_campaign.py},
+\texttt{scripts/t5\_partial\_folds.py}
+(Secs.~\ref{sec:model}--\ref{sec:ladder});
+\texttt{scripts/t5\_mps.py}, \texttt{scripts/t5\_mps\_gate.py},
+\texttt{scripts/t5\_mps\_prod.py}, \texttt{scripts/t5\_floor\_diag.py},
+\texttt{scripts/t5\_run\_one.py}, \texttt{scripts/t5\_prod\_dt01.py},
+\texttt{scripts/t5\_floor\_mechanism.py} (Sec.~\ref{sec:mps}; the last
+emits the entropy, Schmidt-weight and norm-leak diagnostics, and prints
+the entropy at \emph{every} bond so the quoted middle-bond values carry
+their cut); a numerics-provenance
+map \texttt{scripts/SS5\_NUMERICS.md}; result files
+(\texttt{results\_val\_M*\_cap*.txt},
+\texttt{results\_partial\_folds\_M8\_cap6.txt},
+\texttt{mps\_gate\_result.txt}, \texttt{mps\_prod\_results.txt},
+\texttt{dt01\_*.txt}, \texttt{diag\_*\_c64\_dt02.txt}) archived
+alongside.\par}
+
+\begin{thebibliography}{99}\small
+
+\bibitem{indivisible}
+J.~Torkelson,
+\emph{Indivisible stochastic processes for non-Hermitian and
+higher-derivative quantum systems: detailed balance, broken $\PT$
+symmetry, and the explosion of ghosts},
+repository \url{https://github.com/embeddetech/p01-indivisible-ghosts}
+(2026).
+
+\bibitem{instantaneous}
+J.~Torkelson,
+\emph{Ghost vacuum decay as a stochastic process: instantaneous
+states, the boost-orbit measure, and the foliation that ghosts make
+visible}, repository
+\url{https://github.com/embeddetech/p03-instantaneous-ghosts} (2026).
+
+\bibitem{conditioned}
+J.~Torkelson,
+\emph{The price of a post-selected signal: a sharp
+survival--distinguishability trade-off, saturated by broken-$\PT$
+dynamics}, repository
+\url{https://github.com/embeddetech/p04-conditioned-ghosts} (2026).
+
+\bibitem{choosing}
+J.~Torkelson,
+\emph{Conformal gravity must choose: exceptional-point kinematics,
+vacuum decay, and the sample space of Weyl gravity}, repository
+\url{https://github.com/embeddetech/p05-choosing-ghosts} (2026).
+
+\bibitem{unfolded}
+J.~Torkelson,
+\emph{The conformal point is a phase boundary: unfolding
+directions, the sign map of the cascade divisor, and a two-channel
+photonic readout}, repository
+\url{https://github.com/embeddetech/p06-unfolded-ghosts} (2026).
+
+\bibitem{Barandes}
+J.~A.~Barandes,
+\emph{The stochastic-quantum correspondence},
+Philosophy of Physics \textbf{3}(1), 8 (2025),
+doi:10.31389/pop.186, arXiv:2302.10778;
+\emph{The stochastic-quantum theorem}, arXiv:2309.03085.
+
+\bibitem{GSTZ2021}
+C.~Gross, A.~Strumia, D.~Teresi, and M.~Zirilli,
+\emph{Is negative kinetic energy metastable?},
+Phys.\ Rev.\ D \textbf{103}, 115025 (2021), arXiv:2007.05541.
+
+\bibitem{Deffayet2026}
+C.~Deffayet, A.~Fathe Jalali, A.~Held, S.~Mukohyama, and
+A.~Vikman,
+\emph{Unitary time evolution and vacuum for a quantum stable
+ghost},
+arXiv:2604.21823.
+
+\bibitem{EwasiukProfumo2026}
+C.~Ewasiuk and S.~Profumo,
+\emph{Ghost degrees of freedom without quantum runaway: exact
+moment bounds from an operator conservation law},
+arXiv:2604.21348.
+
+\bibitem{CJM2004}
+J.~M.~Cline, S.~Jeon, and G.~D.~Moore,
+\emph{The phantom menaced: constraints on low-energy effective
+ghosts},
+Phys.\ Rev.\ D \textbf{70}, 043543 (2004), hep-ph/0311312.
+
+\bibitem{GV2013}
+J.~Garriga and A.~Vilenkin,
+\emph{Living with ghosts in Lorentz invariant theories},
+JCAP \textbf{01} (2013) 036, arXiv:1202.1239.
+
+\bibitem{Lagnese2021}
+G.~Lagnese, F.~M.~Surace, M.~Kormos, and P.~Calabrese,
+\emph{False vacuum decay in quantum spin chains},
+Phys.\ Rev.\ B \textbf{104}, L201106 (2021), arXiv:2107.10176.
+
+\bibitem{AbelSpannowskyWilliams2025}
+S.~Abel, M.~Spannowsky, and S.~Williams,
+\emph{Qumode tensor networks for false vacuum decay in quantum
+field theory},
+arXiv:2506.17388.
+
+\bibitem{BurshteinGoldstein2024}
+A.~Burshtein and M.~Goldstein,
+\emph{Quantum simulation of the microscopic to macroscopic crossover
+using superconducting quantum impurities},
+Phys.\ Rev.\ B \textbf{111}, 174303 (2025), arXiv:2410.21941.
+
+\end{thebibliography}
+
+\end{document}

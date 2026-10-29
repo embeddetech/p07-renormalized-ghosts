@@ -1,0 +1,6 @@
+case L32 L=32 sign=-1 lam=0.06 chi=40 dt=0.01
+maxabs_dE = 6.996531e-02
+dE_end_per_site = -4.117649e-03
+rate_per_site = -9.330131e-04
+walltime_s = 20419
+done

@@ -1,0 +1,6 @@
+case twin L=16 sign=+1 lam=0.06 chi=40 dt=0.01
+maxabs_dE = 3.559757e-02
+dE_end_per_site = 4.449696e-03
+rate_per_site = 4.162270e-04
+walltime_s = 3070
+done

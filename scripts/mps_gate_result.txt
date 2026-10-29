@@ -1,0 +1,6 @@
+[G1 fixed harness] chi=100 dt=0.02
+t=1 : ED -2.91159e-04  TEBD -2.97130e-04  diff 6.0e-06
+t=2 : ED -1.85934e-04  TEBD -1.87776e-04  diff 1.8e-06
+t=3 : ED 6.31534e-04  TEBD 6.28352e-04  diff 3.2e-06
+t=4 : ED 2.34936e-03  TEBD 2.34702e-03  diff 2.3e-06
+done

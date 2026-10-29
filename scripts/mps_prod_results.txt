@@ -1,0 +1,4 @@
+[10:08:25] prod start (chi=40 nmax=2 lam=0.06)
+[11:37:45] E1 lambda=0 L=16: max|dE| = 5.728e-02 (error floor)
+[13:01:06] E3 normal twin L=16: max|dE| = 5.407e-02
+[14:30:01] E2 L=16: dE(12)/site = 8.9334e-03  rate/site = 6.8282e-04  [5334s]
